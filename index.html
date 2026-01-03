@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Queryable Map with Strict Location Filtering</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+  <div id="container">
+    <div id="controls-container">
+      <h2>Location Search</h2>
+      <div class="control-field">
+        <label for="query-input">Find:</label>
+        <input type="text" id="query-input" placeholder="e.g., Taco Bell">
+      </div>
+      <div class="control-field">
+        <label for="location-input">Near:</label>
+        <input type="text" id="location-input" placeholder="e.g., Denver, CO">
+      </div>
+      <button id="search-button" class="button-primary">Search</button>
+      <div id="message-box"></div>
+      <div id="results-panel">
+        <ul id="results-list"></ul>
+      </div>
+    </div>
+    <div id="map"></div>
+  </div>
+  <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+    key: "AIzaSyBMoVMPbY5k-GAzhRhew2Vi5Uhpp4ePnDQ",
+    v: "weekly"
+  });</script>
+  <script src="script.js"></script>
+</body>
+</html>
