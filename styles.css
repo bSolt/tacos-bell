@@ -108,3 +108,19 @@ h2 {
   color: #555;
   margin-top: 4px;
 }
+
+.flex {
+  display: flex;
+}
+
+.hidden {
+  display: none;
+}
+
+.max-h-8 {
+  max-height: 2rem;
+}
+
+.gap-4 {
+  gap: 1rem;
+}

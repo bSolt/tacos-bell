@@ -8,19 +8,37 @@
 <body>
   <div id="container">
     <div id="controls-container">
-      <h2>Location Search</h2>
-      <div class="control-field">
-        <label for="query-input">Find:</label>
-        <input type="text" id="query-input" placeholder="e.g., Taco Bell">
+      <div id="search-form">
+        <h2>Le Tour de Taco Bell</h2>
+        <div class="control-field">
+          <label for="query-input">Find:</label>
+          <input type="text" id="query-input" placeholder="e.g., Taco Bell">
+        </div>
+        <div class="control-field">
+          <label for="location-input">In:</label>
+          <input type="text" id="location-input" placeholder="e.g., Denver, CO">
+        </div>
+        <div class="control-field flex gap-4">
+          <label for="city-match">Match City?</label>
+          <input type="checkbox" id="city-match" checked>
+        </div>
+        <div class="control-field flex gap-4">
+          <label for="county-match">Match County?</label>
+          <input type="checkbox" id="county-match" checked>
+        </div>
+        <button id="search-button" class="button-primary">Search</button>
       </div>
-      <div class="control-field">
-        <label for="location-input">Near:</label>
-        <input type="text" id="location-input" placeholder="e.g., Denver, CO">
-      </div>
-      <button id="search-button" class="button-primary">Search</button>
       <div id="message-box"></div>
-      <div id="results-panel">
+      <div id="results-panel" class="hidden">
+        <div class="flex">
+          <div id="results-summary"></div>
+          <button id="clear-results-btn" class="max-h-8">Clear</button>
+        </div>
         <ul id="results-list"></ul>
+      </div>
+      <div id="route-box" class="hidden">
+        <button id="calculate-route-button">Calculate Route</button>
+        <div id="route-info" class="hidden"></div>
       </div>
     </div>
     <div id="map"></div>
