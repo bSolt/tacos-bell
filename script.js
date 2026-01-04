@@ -275,29 +275,33 @@ async function calculateBestRoute() {
     fields: ['path', 'legs', 'viewport', 'localizedValues', 'warnings', 'distanceMeters', 'durationMillis', 'optimizedIntermediateWaypointIndices']
   };
 
-  const { routes } = await Route.computeRoutes(request);
+  try {
+    const { routes } = await Route.computeRoutes(request);
+    if (routes && routes.length > 0) {
+      const route = routes[0];
+      // console.log("best route", route, route.localizedValues);
+      [routePolyline] = route.createPolylines({
+        polylineOptions: {
+          map: map,
+          strokeColor: '#1a73e8',
+          strokeWeight: 6,
+          strokeOpacity: 0.8,
+        },
+      });
 
-  if (routes && routes.length > 0) {
-    const route = routes[0];
-    // console.log("best route", route, route.localizedValues);
-    [routePolyline] = route.createPolylines({
-      polylineOptions: {
-        map: map,
-        strokeColor: '#1a73e8',
-        strokeWeight: 6,
-        strokeOpacity: 0.8,
-      },
-    });
+      const routeInfoDiv = document.getElementById('route-info');
+      const distance = route.localizedValues?.distance || 'N/A';
+      const duration = route.localizedValues?.duration || 'N/A';
+      routeInfoDiv.innerHTML = `<strong>Best Route:</strong> ${distance} / ${duration}`;
+      routeInfoDiv.classList.remove('hidden');
 
-    const routeInfoDiv = document.getElementById('route-info');
-    const distance = route.localizedValues?.distance || 'N/A';
-    const duration = route.localizedValues?.duration || 'N/A';
-    routeInfoDiv.innerHTML = `<strong>Best Route:</strong> ${distance} / ${duration}`;
-    routeInfoDiv.classList.remove('hidden');
-
-    map.fitBounds(route.viewport);
-  } else {
-    const message = 'Could not calculate a route.';
+      map.fitBounds(route.viewport);
+    } else {
+      throw new Error('No routes found.');
+    }
+  } catch (error) {
+    console.error("Route calculation failed:", error);
+    const message = 'Could not calculate a route. ' + error;
     console.error(message);
     const routeInfoDiv = document.getElementById('route-info');
     routeInfoDiv.innerHTML = message;
