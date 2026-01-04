@@ -40,17 +40,17 @@ async function performSearch() {
 
   if (!location) {
     messageBox.textContent = "Please enter a location.";
-    messageBox.style.display = "block";
+    messageBox.classList.remove("hidden")
     return;
   }
   if (!query) {
     messageBox.textContent = "Please enter what you are looking for.";
-    messageBox.style.display = "block";
+    messageBox.classList.remove("hidden")
     return;
   }
 
   messageBox.textContent = "Searching...";
-  messageBox.style.display = "block";
+  messageBox.classList.remove("hidden")
 
   try {
     const geocodeResults = await geocoder.geocode({ address: location, language: 'en' });
@@ -104,14 +104,15 @@ async function performSearch() {
       );
       checkedPlaces = new Set(filteredPlaces.map(place => place.id));
 
-      // console.log(places.map(p => p.addressComponents.map(c => [c.longText, c.types])), matchFields, filteredPlaces)
-
-
-      if (filteredPlaces.length) {
-        messageBox.style.display = "none";
+      if (filteredPlaces.length > 1) {
+        messageBox.classList.add("hidden")
         displayResults(query, location, filteredPlaces);
         document.getElementById('route-box').classList.remove("hidden");
-      } else {
+      } else if (filteredPlaces.length == 1) {
+        displayResults(query, location, filteredPlaces);
+        messageBox.textContent = "Found 1 result in the specified area, which is not enough for a grand tour..."
+      }
+      else {
         messageBox.textContent = "No results found in the specified area.";
       }
     } else {
@@ -150,9 +151,10 @@ function clearResults() {
   document.getElementById("search-form").classList.remove("hidden");
   document.getElementById("results-panel").classList.add("hidden");
   document.getElementById("route-box").classList.add("hidden");
+  document.getElementById("message-box").classList.remove("hidden");
+  document.getElementById("message-box").textContent = "";
   document.getElementById("results-list").innerHTML = "";
   document.getElementById('route-info').innerHTML = "";
-  document.getElementById("message-box").style.display = "none";
   infoWindow.close();
   if (routePolyline) {
     routePolyline.setMap(null);
