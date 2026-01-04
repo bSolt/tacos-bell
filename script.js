@@ -151,7 +151,7 @@ function clearResults() {
   document.getElementById("search-form").classList.remove("hidden");
   document.getElementById("results-panel").classList.add("hidden");
   document.getElementById("route-box").classList.add("hidden");
-  document.getElementById("message-box").classList.remove("hidden");
+  document.getElementById("message-box").classList.add("hidden");
   document.getElementById("message-box").textContent = "";
   document.getElementById("results-list").innerHTML = "";
   document.getElementById('route-info').innerHTML = "";

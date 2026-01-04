@@ -74,7 +74,6 @@ h2 {
   border-radius: 4px;
   min-height: 20px;
   text-align: center;
-  display: none; /* Hidden by default */
 }
 
 #results-panel {
