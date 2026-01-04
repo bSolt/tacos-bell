@@ -21,14 +21,22 @@ async function initMap() {
   geocoder = new Geocoder();
   infoWindow = new InfoWindow();
 
-  document.getElementById("search-button").addEventListener("click", performSearch);
-  document.getElementById("location-input").addEventListener("keydown", (event) => {
-    if (event.key === "Enter") {
-      performSearch();
-    }
-  });
-  document.getElementById("clear-results-btn").addEventListener("click", clearResults);
-  document.getElementById('calculate-route-button').addEventListener("click", calculateBestRoute);
+  document
+    .getElementById("search-button")
+    .addEventListener("click", performSearch);
+  document
+    .getElementById("location-input")
+    .addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        performSearch();
+      }
+    });
+  document
+    .getElementById("clear-results-btn")
+    .addEventListener("click", clearResults);
+  document
+    .getElementById("calculate-route-button")
+    .addEventListener("click", calculateBestRoute);
 }
 
 async function performSearch() {
@@ -40,29 +48,36 @@ async function performSearch() {
 
   if (!location) {
     messageBox.textContent = "Please enter a location.";
-    messageBox.classList.remove("hidden")
+    messageBox.classList.remove("hidden");
     return;
   }
   if (!query) {
     messageBox.textContent = "Please enter what you are looking for.";
-    messageBox.classList.remove("hidden")
+    messageBox.classList.remove("hidden");
     return;
   }
 
   messageBox.textContent = "Searching...";
-  messageBox.classList.remove("hidden")
+  messageBox.classList.remove("hidden");
 
   try {
-    const geocodeResults = await geocoder.geocode({ address: location, language: 'en' });
+    const geocodeResults = await geocoder.geocode({
+      address: location,
+      language: "en",
+    });
     if (geocodeResults.results && geocodeResults.results.length > 0) {
-      const geocodeResult = geocodeResults.results[0]
-      const localityName = geocodeResult.address_components
-        .find(component => component.types.includes("locality")
-        )?.long_name;
-      const countyName = geocodeResult.address_components
-        .find(component => component.types.includes("administrative_area_level_2")
-        )?.long_name;
-      const matchFields = [];
+      const geocodeResult = geocodeResults.results[0];
+      // console.log(geocodeResult);
+      const localityName = geocodeResult.address_components.find((component) =>
+        component.types.includes("locality")
+      )?.long_name;
+      const countyName = geocodeResult.address_components.find((component) =>
+        component.types.includes("administrative_area_level_2")
+      )?.long_name;
+      const countryName = geocodeResult.address_components.find((component) =>
+        component.types.includes("country")
+      )?.long_name;
+      const matchFields = [["country", countryName]];
       if (document.getElementById("city-match").checked && localityName) {
         matchFields.push(["locality", localityName]);
       }
@@ -76,43 +91,51 @@ async function performSearch() {
 
       const request = {
         textQuery: query,
-        fields: ["displayName", "location", "formattedAddress", "addressComponents"],
-        locationRestriction: viewport
+        language: 'en',
+        fields: [
+          "displayName",
+          "location",
+          "formattedAddress",
+          "addressComponents",
+        ],
+        locationRestriction: viewport,
       };
-      let { places } = await Place.searchByText(request)
+      let { places } = await Place.searchByText(request);
 
       if (places.length == 20) {
         // Search by quadrant if there are more than 20 places (max)
-        const quads = await getViewportQuadrants(viewport)
+        const quads = await getViewportQuadrants(viewport);
         const promises = quads.map((quad) =>
           Place.searchByText({
             ...request,
-            locationRestriction: quad
+            locationRestriction: quad,
           })
         );
         const results = await Promise.all(promises);
-        places = results.flatMap(result => result.places);
+        places = results.flatMap((result) => result.places);
       }
 
-      filteredPlaces = places.filter(
-        (place) => matchFields.every(
-          ([matchType, matchValue]) => place.addressComponents.some(
+      filteredPlaces = places.filter((place) =>
+        matchFields.every(([matchType, matchValue]) =>
+          place.addressComponents.some(
             (component) =>
-              component.types.includes(matchType) && component.longText.includes(matchValue)
+              component.types.includes(matchType) &&
+              component.longText == matchValue
           )
         )
       );
-      checkedPlaces = new Set(filteredPlaces.map(place => place.id));
+      // console.log(places.map(p => p.addressComponents), filteredPlaces.length)
+      checkedPlaces = new Set(filteredPlaces.map((place) => place.id));
 
       if (filteredPlaces.length > 1) {
-        messageBox.classList.add("hidden")
+        messageBox.classList.add("hidden");
         displayResults(query, location, filteredPlaces);
-        document.getElementById('route-box').classList.remove("hidden");
+        document.getElementById("route-box").classList.remove("hidden");
       } else if (filteredPlaces.length == 1) {
         displayResults(query, location, filteredPlaces);
-        messageBox.textContent = "Found 1 result in the specified area, which is not enough for a grand tour..."
-      }
-      else {
+        messageBox.textContent =
+          "Found 1 result in the specified area, which is not enough for a grand tour...";
+      } else {
         messageBox.textContent = "No results found in the specified area.";
       }
     } else {
@@ -125,7 +148,7 @@ async function performSearch() {
 }
 
 async function getViewportQuadrants(viewport) {
-  const { LatLngBounds } = await google.maps.importLibrary("core")
+  const { LatLngBounds } = await google.maps.importLibrary("core");
   // split one bounds into quadrants
   const north = viewport.getNorthEast().lat();
   const east = viewport.getNorthEast().lng();
@@ -139,8 +162,7 @@ async function getViewportQuadrants(viewport) {
     new LatLngBounds({ north, east: midLng, south: midLat, west }),
     new LatLngBounds({ north: midLat, east: midLng, south, west }),
     new LatLngBounds({ north: midLat, east, south, west: midLng }),
-  ]
-
+  ];
 }
 
 function clearResults() {
@@ -149,12 +171,13 @@ function clearResults() {
   });
   markers = [];
   document.getElementById("search-form").classList.remove("hidden");
+  document.getElementById("results-list").classList.remove("hidden");
   document.getElementById("results-panel").classList.add("hidden");
   document.getElementById("route-box").classList.add("hidden");
   document.getElementById("message-box").classList.add("hidden");
   document.getElementById("message-box").textContent = "";
   document.getElementById("results-list").innerHTML = "";
-  document.getElementById('route-info').innerHTML = "";
+  document.getElementById("route-info").innerHTML = "";
   infoWindow.close();
   if (routePolyline) {
     routePolyline.setMap(null);
@@ -163,7 +186,7 @@ function clearResults() {
 
 function displayResults(query, location, places) {
   document.getElementById("results-panel").classList.remove("hidden");
-  document.getElementById('search-form').classList.add("hidden");
+  document.getElementById("search-form").classList.add("hidden");
   const resultsList = document.getElementById("results-list");
   const resultSummary = document.getElementById("results-summary");
   const bounds = new google.maps.LatLngBounds();
@@ -175,7 +198,7 @@ function displayResults(query, location, places) {
   <h3>
     In ${location}
   </h3>
-  `
+  `;
 
   places.forEach((place) => {
     bounds.extend(place.location);
@@ -184,7 +207,6 @@ function displayResults(query, location, places) {
     const marker = await createMarker(place);
     resultsList.appendChild(createNewResult(place, marker));
   });
-
 
   if (places.length > 1) {
     map.fitBounds(bounds);
@@ -196,11 +218,20 @@ function displayResults(query, location, places) {
 
 function createNewResult(place, marker) {
   const listItem = document.createElement("li");
-  listItem.classList.add("flex");
+  listItem.classList.add(
+    "flex",
+    "gap-2",
+    "p-4",
+    "cursor-pointer",
+    "border-b",
+    "border-gray-200",
+    "transition-colors",
+    "hover:bg-gray-50"
+  );
   listItem.innerHTML = `
       <div>
-        <div class="place-name">${place.displayName}</div>
-        <div class="place-address">${place.formattedAddress}</div>
+        <div class="place-name font-bold">${place.displayName}</div>
+        <div class="place-address text-sm text-gray mt-2">${place.formattedAddress}</div>
       </div>
     `;
   const checkbox = document.createElement("input");
@@ -217,7 +248,7 @@ function createNewResult(place, marker) {
       checkedPlaces.delete(place.id);
     }
   });
-  listItem.prepend(checkbox)
+  listItem.prepend(checkbox);
   listItem.addEventListener("click", () => {
     if (!checkbox.checked) return;
     google.maps.event.trigger(marker, "click");
@@ -248,14 +279,16 @@ async function createMarker(place) {
 }
 
 async function calculateBestRoute() {
-  const selectedPlaces = filteredPlaces.filter((place) => checkedPlaces.has(place.id));
+  const selectedPlaces = filteredPlaces.filter((place) =>
+    checkedPlaces.has(place.id)
+  );
   // console.log('calculating route for', checkedPlaces, selectedPlaces, selectedPlaces.map(p => p.location))
   if (selectedPlaces.length < 2) {
-    const message = 'Need at least 2 locations to calculate a route.';
+    const message = "Need at least 2 locations to calculate a route.";
     console.warn(message);
-    const routeInfoDiv = document.getElementById('route-info');
+    const routeInfoDiv = document.getElementById("route-info");
     routeInfoDiv.innerHTML = message;
-    routeInfoDiv.classList.remove('hidden');
+    routeInfoDiv.classList.remove("hidden");
     return;
   }
 
@@ -265,16 +298,27 @@ async function calculateBestRoute() {
 
   const { Route } = await google.maps.importLibrary("routes");
 
-  const waypoints = selectedPlaces.map(place => ({ location: place.location }));
+  const waypoints = selectedPlaces.map((place) => ({
+    location: place.location,
+  }));
   const origin = waypoints.shift();
 
   const request = {
     origin: origin,
     destination: origin,
     intermediates: waypoints,
-    travelMode: 'BICYCLING',
+    travelMode: "BICYCLING",
     optimizeWaypointOrder: true,
-    fields: ['path', 'legs', 'viewport', 'localizedValues', 'warnings', 'distanceMeters', 'durationMillis', 'optimizedIntermediateWaypointIndices']
+    fields: [
+      "path",
+      "legs",
+      "viewport",
+      "localizedValues",
+      "warnings",
+      "distanceMeters",
+      "durationMillis",
+      "optimizedIntermediateWaypointIndices",
+    ],
   };
 
   try {
@@ -285,29 +329,32 @@ async function calculateBestRoute() {
       [routePolyline] = route.createPolylines({
         polylineOptions: {
           map: map,
-          strokeColor: '#1a73e8',
+          strokeColor: "#1a73e8",
           strokeWeight: 6,
           strokeOpacity: 0.8,
         },
       });
 
-      const routeInfoDiv = document.getElementById('route-info');
-      const distance = route.localizedValues?.distance || 'N/A';
-      const duration = route.localizedValues?.duration || 'N/A';
+      const routeInfoDiv = document.getElementById("route-info");
+      const distance = route.localizedValues?.distance || "N/A";
+      const duration = route.localizedValues?.duration || "N/A";
       routeInfoDiv.innerHTML = `<strong>Best Route:</strong> ${distance} / ${duration}`;
-      routeInfoDiv.classList.remove('hidden');
+      routeInfoDiv.classList.remove("hidden");
+      document.getElementById("results-list").classList.add("hidden");
+      document.getElementById("calculate-route-button").classList.add("hidden");
 
       map.fitBounds(route.viewport);
     } else {
-      throw new Error('No routes found.');
+      throw new Error("No routes found.");
     }
   } catch (error) {
+    // TODO: Add a way to manually calculate the best route if there are more than 25 waypoints
     console.error("Route calculation failed:", error);
-    const message = 'Could not calculate a route. ' + error;
+    const message = "Could not calculate a route. " + error;
     console.error(message);
-    const routeInfoDiv = document.getElementById('route-info');
+    const routeInfoDiv = document.getElementById("route-info");
     routeInfoDiv.innerHTML = message;
-    routeInfoDiv.classList.remove('hidden');
+    routeInfoDiv.classList.remove("hidden");
   }
 }
 
