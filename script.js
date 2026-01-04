@@ -58,15 +58,15 @@ async function performSearch() {
       const geocodeResult = geocodeResults.results[0]
       const localityName = geocodeResult.address_components
         .find(component => component.types.includes("locality")
-        ).long_name;
+        )?.long_name;
       const countyName = geocodeResult.address_components
         .find(component => component.types.includes("administrative_area_level_2")
-        ).long_name;
+        )?.long_name;
       const matchFields = [];
-      if (document.getElementById("city-match").checked) {
+      if (document.getElementById("city-match").checked && localityName) {
         matchFields.push(["locality", localityName]);
       }
-      if (document.getElementById("county-match").checked) {
+      if (document.getElementById("county-match").checked && countyName) {
         matchFields.push(["administrative_area_level_2", countyName]);
       }
       const viewport = geocodeResult.geometry.viewport;
@@ -151,6 +151,7 @@ function clearResults() {
   document.getElementById("results-panel").classList.add("hidden");
   document.getElementById("route-box").classList.add("hidden");
   document.getElementById("results-list").innerHTML = "";
+  document.getElementById('route-info').innerHTML = "";
   document.getElementById("message-box").style.display = "none";
   infoWindow.close();
   if (routePolyline) {

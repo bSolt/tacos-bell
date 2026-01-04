@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Queryable Map with Strict Location Filtering</title>
+  <title>Tacos Bell</title>
   <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
@@ -10,6 +10,7 @@
     <div id="controls-container">
       <div id="search-form">
         <h2>Le Tour de Taco Bell</h2>
+        <p>Enter a search and a jurisdiction to create a bike route that visits each matching location</p>
         <div class="control-field">
           <label for="query-input">Find:</label>
           <input type="text" id="query-input" placeholder="e.g., Taco Bell">
@@ -37,7 +38,7 @@
         <ul id="results-list"></ul>
       </div>
       <div id="route-box" class="hidden">
-        <button id="calculate-route-button">Calculate Route</button>
+        <button id="calculate-route-button" class="button-primary">Calculate Route</button>
         <div id="route-info" class="hidden"></div>
       </div>
     </div>
