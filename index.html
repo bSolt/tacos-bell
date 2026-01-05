@@ -19,64 +19,64 @@
     <div id="container" class="flex flex-col md:flex-row w-full h-full">
       <div
         id="controls-container"
-        class="flex flex-col px-5 z-10 overflow-y-auto shadow max-h-1/2 md:max-h-full max-w-full md:max-w-80"
+        class="flex flex-col px-5 z-10 shadow max-h-1/2 md:max-h-full max-w-full md:max-w-80"
       >
-        <div id="search-form">
-          <h2>Le Tour des Tacos Belle</h2>
-          <p>
-            Enter a search and a jurisdiction to create a bike route that visits
-            each matching location
-          </p>
-          <div class="flex flex-col">
-            <div class="control-field">
-              <label for="query-input">Find:</label>
-              <input
-                type="text"
-                id="query-input"
-                placeholder="e.g., Taco Bell"
-              />
-            </div>
-            <div class="control-field">
-              <label for="location-input">In:</label>
-              <input
-                type="text"
-                id="location-input"
-                placeholder="e.g., Denver, CO"
-              />
-            </div>
-            <div class="control-field flex gap-4">
-              <label for="city-match">Match City?</label>
-              <input type="checkbox" id="city-match" checked />
-            </div>
-            <div class="control-field flex gap-4">
-              <label for="county-match">Match County?</label>
-              <input type="checkbox" id="county-match" checked />
+        <div class="overflow-y-auto">
+          <div id="search-form">
+            <h2>Le Tour des Tacos Belle</h2>
+            <p>
+              Enter a search and a jurisdiction to create a bike route that visits
+              each matching location
+            </p>
+            <div class="flex flex-col">
+              <div class="control-field">
+                <label for="query-input">Find:</label>
+                <input
+                  type="text"
+                  id="query-input"
+                  placeholder="e.g., Taco Bell"
+                />
+              </div>
+              <div class="control-field">
+                <label for="location-input">In:</label>
+                <input
+                  type="text"
+                  id="location-input"
+                  placeholder="e.g., Denver, CO"
+                />
+              </div>
+              <div class="control-field flex gap-4">
+                <label for="city-match">Match City?</label>
+                <input type="checkbox" id="city-match" checked />
+              </div>
+              <div class="control-field flex gap-4">
+                <label for="county-match">Match County?</label>
+                <input type="checkbox" id="county-match" checked />
+              </div>
             </div>
           </div>
-        </div>
-        <div
-          id="message-box"
-          class="hidden p-2 mt-2 rounded min-h-5 text-center"
-        ></div>
-        <div id="results-panel" class="hidden">
-          <div
-            id="results-summary-container"
-            class="flex justify-between items-center p-2"
-          >
-            <div id="results-summary"></div>
-            <button id="clear-results-btn" class="max-h-8">
-              <i class="fa-solid fa-rotate-right"></i>
-            </button>
+          <div id="message-box"
+            class="hidden p-2 mt-2 rounded min-h-5 text-center"
+          ></div>
+          <div id="results-panel" class="hidden">
+            <div
+              id="results-summary-container"
+              class="flex justify-between items-center p-2"
+            >
+              <div id="results-summary"></div>
+              <button id="clear-results-btn" class="max-h-8">
+                <i class="fa-solid fa-rotate-right"></i>
+              </button>
+            </div>
+            <ul
+              id="results-list"
+              class="flex-grow overflow-y-auto list-none p-0 m-0"
+            ></ul>
           </div>
-          <ul
-            id="results-list"
-            class="flex-grow overflow-y-auto list-none p-0 m-0"
-          ></ul>
+          <div id="route-box">
+            <div id="route-info" class="hidden"></div>
+          </div>
         </div>
-        <div id="route-box">
-          <div id="route-info" class="hidden"></div>
-        </div>
-      </div>
       <div class="button-container flex">
         <button id="search-button" class="button-primary flex-grow my-4 mx-2">
           Search
@@ -88,6 +88,7 @@
           Calculate Route
         </button>
       </div>
+      </div>   
       <div id="map" class="flex-grow h-full"></div>
     </div>
     <script src="load_google.js"></script>
