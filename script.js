@@ -130,6 +130,8 @@ async function performSearch() {
       if (filteredPlaces.length > 1) {
         messageBox.classList.add("hidden");
         displayResults(query, location, filteredPlaces);
+        document.getElementById("search-button").classList.add("hidden");
+        document.getElementById("calculate-route-button").classList.remove("hidden");
         document.getElementById("route-box").classList.remove("hidden");
       } else if (filteredPlaces.length == 1) {
         displayResults(query, location, filteredPlaces);

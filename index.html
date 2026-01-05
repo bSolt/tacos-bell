@@ -53,7 +53,6 @@
               <input type="checkbox" id="county-match" checked />
             </div>
           </div>
-          <button id="search-button" class="button-primary">Search</button>
         </div>
         <div
           id="message-box"
@@ -74,12 +73,20 @@
             class="flex-grow overflow-y-auto list-none p-0 m-0"
           ></ul>
         </div>
-        <div id="route-box" class="hidden">
-          <button id="calculate-route-button" class="button-primary">
-            Calculate Route
-          </button>
+        <div id="route-box">
           <div id="route-info" class="hidden"></div>
         </div>
+      </div>
+      <div class="button-container flex">
+        <button id="search-button" class="button-primary flex-grow my-4 mx-2">
+          Search
+        </button>
+        <button
+          id="calculate-route-button"
+          class="button-primary flex-grow my-4 mx-2 hidden"
+        >
+          Calculate Route
+        </button>
       </div>
       <div id="map" class="flex-grow h-full"></div>
     </div>
